@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"github.com/bencaron/uchiwa/conf"
 )
 
 // Sensu struct contains the API details
@@ -15,17 +14,17 @@ type Sensu struct {
 	Path    string
 	URL     string
 	Timeout int
-	Config  conf.SensuConfig
 }
 
 // Sensu contains data fetched from Sensu API
-var sensu = new(Sensu)
+//var sensu = new(Sensu)
 
-// New initialize a new Sensu API
-func (s *Sensu) Connect(config conf.SensuConfig) {
-	s.Config = config
-	fmt.Printf("%+v\n", config)
-	fmt.Printf("%+v\n", s)
+// NewSensu initialize a new Sensu API
+func (s *Sensu) NewSensu() {
+	fmt.Printf("NewSensu %+v\n", s)
+	//s.Config = config
+	//fmt.Printf("%+v\n", config)
+	//fmt.Printf("%+v\n", s)
 	//if s.Name = config.Name; s.Name != "" {
 	//  s.Name
 	//}
@@ -33,17 +32,23 @@ func (s *Sensu) Connect(config conf.SensuConfig) {
 	///fmt.Printf("%+v\n", s)
 }
 
+// GetEventsForClient Returns the current events for given client
+func (s *Sensu) GetEventsForClient(client string) ([]interface{}, error) {
+	//return s.Get("events", client)
+	return s.Get(fmt.Sprintf("events/%s", client))
+}
 
-func (s *Sensu) GetEventsForClient(client string ) ([]interface{}, error) {
+// GetEvents Return all the current events
+func (s *Sensu) GetEvents() ([]interface{}, error) {
 	return s.Get("events")
 }
 
 // Get ...
 func (s *Sensu) Get(endpoint string) ([]interface{}, error) {
-
-	req, err := http.NewRequest("GET", "http://localhost:4567/clients", nil)
+	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Parsing URL %q returned: %v", err, err)
+		return nil, fmt.Errorf("Sensu.Get URL Parsing error: %q returned: %v", err, err)
 	}
 
 	client := http.Client{}
@@ -66,12 +71,12 @@ func (s *Sensu) Get(endpoint string) ([]interface{}, error) {
 	return results, nil
 }
 
-func init() {
-	fmt.Printf("why is this called?")
-	sensu.Name = "Sensu"
-	sensu.Path = ""
-	sensu.Timeout = 10000
-}
+// func init() {
+// 	fmt.Printf("why is this called?")
+// 	sensu.Name = "Sensu"
+// 	sensu.Path = ""
+// 	sensu.Timeout = 10000
+// }
 
 //func GetClients(url string) ([]interface{}, error) {
 //clients, err := get(url, "clients")
