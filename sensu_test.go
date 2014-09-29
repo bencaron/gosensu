@@ -40,5 +40,6 @@ func TestGetClientList(t *testing.T) {
 	if events == nil {
 		t.Error("Sensu events is nil")
 	}
-	fmt.Printf("events: %v", events)
+	// FIXME
+	// fmt.Printf("events: %v", events)
 }

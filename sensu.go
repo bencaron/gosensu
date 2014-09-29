@@ -32,19 +32,35 @@ func (s *Sensu) NewSensu() {
 	///fmt.Printf("%+v\n", s)
 }
 
-// GetEventsForClient Returns the current events for given client
-func (s *Sensu) GetEventsForClient(client string) ([]interface{}, error) {
-	//return s.Get("events", client)
-	return s.Get(fmt.Sprintf("events/%s", client))
+// Health The health endpoint checks to see if the api can connect to redis and rabbitmq. It takes parameters for minimum consumers and maximum messages and checks rabbitmq.
+func (s *Sensu) Health(consumers int, messages int) ([]interface{}, error) {
+	fmt.Printf("FIXME health args")
+	return s.Get(fmt.Sprintf("health/%d/%d", consumers, messages))
 }
 
-// GetEvents Return all the current events
-func (s *Sensu) GetEvents() ([]interface{}, error) {
-	return s.Get("events")
+// Info Will return the Sensu version along with rabbitmq and redis information.
+func (s *Sensu) Info() ([]interface{}, error) {
+	return s.Get("info")
+}
+
+// Delete Delete resource
+func (s *Sensu) Delete(endpoint string) ([]interface{}, error) {
+	// Call a List with magic value of limit 0 and offset 0
+	fmt.Printf("FIXME Delete is NOT IMPLEMENTED")
+	return s.GetList(endpoint, 0, 0)
 }
 
 // Get ...
 func (s *Sensu) Get(endpoint string) ([]interface{}, error) {
+	// Call a List with magic value of limit 0 and offset 0
+	return s.GetList(endpoint, 0, 0)
+}
+
+// GetList Construct an API call and return the list of results
+func (s *Sensu) GetList(endpoint string, limit int, offset int) ([]interface{}, error) {
+
+	fmt.Printf("ERROR GET LIST TODO deal with limit %d and offset %d", limit, offset)
+
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -69,6 +85,13 @@ func (s *Sensu) Get(endpoint string) ([]interface{}, error) {
 	}
 
 	return results, nil
+}
+
+// Post to endpoint
+func (s *Sensu) Post(endpoint string) ([]interface{}, error) {
+	// Call a List with magic value of limit 0 and offset 0
+	fmt.Printf("POST is not implemented yet\n")
+	return s.Get(endpoint)
 }
 
 // func init() {
