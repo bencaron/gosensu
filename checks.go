@@ -7,7 +7,7 @@ func (s *Sensu) GetChecks() ([]interface{}, error) {
 	return s.Get("checks")
 }
 
-// GetCheck Return check info
+// GetCheck Return check info for a specific check
 func (s *Sensu) GetCheck(check string) ([]interface{}, error) {
 	return s.Get(fmt.Sprintf("check/%s", check))
 }
