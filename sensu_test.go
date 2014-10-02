@@ -2,13 +2,13 @@ package sensu
 
 import (
 	"fmt"
+	"os"
 	"testing"
 )
 
 func getSensuTester() *Sensu {
-	sensu := new(Sensu)
-	sensu.Name = "Sensu Test API"
-	sensu.URL = "http://lpd-sensu-01:4567"
+	fmt.Printf("Reading sensu server config from ENV SENSU_SERVER_URL: %s", os.Getenv("SENSU_SERVER_URL"))
+	sensu := NewSensu("Sensu test API", "", os.Getenv("SENSU_SERVER_URL"), 15)
 	return sensu
 }
 
