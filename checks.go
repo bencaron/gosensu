@@ -2,13 +2,6 @@ package sensu
 
 import "fmt"
 
-type check struct {
-	Name        string
-	Command     string
-	Subscribers []interface{}
-	Interval    int
-}
-
 // GetChecks Return the list of checks
 func (s *Sensu) GetChecks() ([]interface{}, error) {
 	return s.GetList("checks", 0, 0)
