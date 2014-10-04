@@ -3,7 +3,12 @@ package sensu
 import "fmt"
 
 // GetClients Return the list of clients
-func (s *Sensu) GetClients(limit int, offset int) ([]interface{}, error) {
+func (s *Sensu) GetClients() ([]interface{}, error) {
+	return s.GetList("clients", 0, 0)
+}
+
+// GetClientsSlice Return a slice in the list of clients
+func (s *Sensu) GetClientsSlice(limit int, offset int) ([]interface{}, error) {
 	return s.GetList("clients", limit, offset)
 }
 

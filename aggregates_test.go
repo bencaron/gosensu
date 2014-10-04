@@ -18,5 +18,6 @@ func TestGetAggregates(t *testing.T) {
 	if agg == nil {
 		t.Error("Sensu agg is nil")
 	}
-	//fmt.Printf("agg: %v", agg)
+	fmt.Printf("TestGet Aggregates:\n")
+	fmt.Printf("\t\tagg: %v", agg)
 }

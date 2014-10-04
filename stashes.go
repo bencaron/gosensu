@@ -3,7 +3,12 @@ package sensu
 import "fmt"
 
 // GetStashes Return a list of stashes path
-func (s *Sensu) GetStashes(limit int, offset int) ([]interface{}, error) {
+func (s *Sensu) GetStashes() ([]interface{}, error) {
+	return s.GetList(fmt.Sprintf("stashes"), 0, 0)
+}
+
+// GetStashesSlice Return a slice in the list of stashes path
+func (s *Sensu) GetStashesSlice(limit int, offset int) ([]interface{}, error) {
 	fmt.Printf("FIXME GetStashes incomplete %d %d", limit, offset)
 	return s.GetList(fmt.Sprintf("stashes"), 0, 0)
 }
