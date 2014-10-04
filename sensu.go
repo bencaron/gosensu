@@ -80,6 +80,9 @@ func (s *Sensu) doHTTP(req *http.Request) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("HTTP request returned: %v", err)
 	}
+	if res.StatusCode >= 400 {
+		return nil, fmt.Errorf("Error calling API at %s: %s", s.URL, res.Status)
+	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	res.Body.Close()
