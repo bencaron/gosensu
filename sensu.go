@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 // Sensu struct contains the API details
@@ -22,27 +23,31 @@ func NewSensu(name string, path string, url string, timeout int) *Sensu {
 }
 
 // Health The health endpoint checks to see if the api can connect to redis and rabbitmq. It takes parameters for minimum consumers and maximum messages and checks rabbitmq.
-func (s *Sensu) Health(consumers int, messages int) ([]interface{}, error) {
+func (s *Sensu) Health(consumers int, messages int) (map[string]interface{}, error) {
 	fmt.Printf("FIXME health args")
 	return s.Get(fmt.Sprintf("health/%d/%d", consumers, messages))
 }
 
 // Info Will return the Sensu version along with rabbitmq and redis information.
-func (s *Sensu) Info() ([]interface{}, error) {
+func (s *Sensu) Info() (map[string]interface{}, error) {
 	return s.Get("info")
 }
 
-// Delete Delete resource
-func (s *Sensu) Delete(endpoint string) ([]interface{}, error) {
-	// Call a List with magic value of limit 0 and offset 0
-	fmt.Printf("FIXME Delete is NOT IMPLEMENTED")
-	return s.GetList(endpoint, 0, 0)
-}
-
 // Get ...
-func (s *Sensu) Get(endpoint string) ([]interface{}, error) {
+func (s *Sensu) Get(endpoint string) (map[string]interface{}, error) {
 	// Call a List with magic value of limit 0 and offset 0
-	return s.GetList(endpoint, 0, 0)
+	fmt.Printf("DEBUG: Get endpoint = %s", endpoint)
+	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("Sensu.Get Parsing error: %q returned: %v", err, err)
+	}
+
+	res, err := s.doHTTP(req)
+	if err != nil {
+		return nil, fmt.Errorf("Sensu.Get Error calling Sensu API: %q returned: %v", err, err)
+	}
+	return s.doJSON(res)
 }
 
 // GetList Construct an API call and return the list of results
@@ -53,9 +58,16 @@ func (s *Sensu) GetList(endpoint string, limit int, offset int) ([]interface{}, 
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.Get URL Parsing error: %q returned: %v", err, err)
+		return nil, fmt.Errorf("Sensu.GetList URL Parsing error: %q returned: %v", err, err)
 	}
+	res, err := s.doHTTP(req)
+	if err != nil {
+		return nil, fmt.Errorf("Sensu.GetList Error calling Sensu API: %q returned: %v", err, err)
+	}
+	return s.doJSONArray(res)
+}
 
+func (s *Sensu) doHTTP(req *http.Request) ([]byte, error) {
 	client := http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
@@ -67,18 +79,75 @@ func (s *Sensu) GetList(endpoint string, limit int, offset int) ([]interface{}, 
 	if err != nil {
 		return nil, fmt.Errorf("Parsing response body returned: %v", err)
 	}
+	return body, nil
+}
 
+// doJsonArray Unmarshall JSON expecting an array
+func (s *Sensu) doJSONArray(body []byte) ([]interface{}, error) {
 	var results []interface{}
 	if err := json.Unmarshal(body, &results); err != nil {
 		return nil, fmt.Errorf("Parsing JSON-encoded response body: %v", err)
 	}
+	return results, nil
+}
 
+// doJsonArray Unmarshall JSON expecting a map
+func (s *Sensu) doJSON(body []byte) (map[string]interface{}, error) {
+	var results map[string]interface{}
+	if err := json.Unmarshal(body, &results); err != nil {
+		return nil, fmt.Errorf("Parsing JSON-encoded response body: %v", err)
+	}
 	return results, nil
 }
 
 // Post to endpoint
-func (s *Sensu) Post(endpoint string) ([]interface{}, error) {
+func (s *Sensu) Post(endpoint string) (map[string]interface{}, error) {
 	// Call a List with magic value of limit 0 and offset 0
-	fmt.Printf("POST is not implemented yet\n")
-	return s.Get(endpoint)
+
+	//ERROR GET LIST TODO deal with limit %d and offset %d", limit, offset
+
+	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
+	req, err := http.NewRequest("POST", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("Sensu.Post Parsing error: %q returned: %v", err, err)
+	}
+
+	res, err := s.doHTTP(req)
+	if err != nil {
+		return nil, fmt.Errorf("Sensu.GetList Error calling Sensu API: %q returned: %v", err, err)
+	}
+	return s.doJSON(res)
+}
+
+// PostPayload to endpoint
+func (s *Sensu) PostPayload(endpoint string, payload string) (map[string]interface{}, error) {
+	// Call a List with magic value of limit 0 and offset 0
+
+	//ERROR GET LIST TODO deal with limit %d and offset %d", limit, offset
+
+	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
+	req, err := http.NewRequest("POST", url, strings.NewReader(payload))
+	if err != nil {
+		return nil, fmt.Errorf("Sensu.PostPayload Parsing error: %q returned: %v", err, err)
+	}
+	res, err := s.doHTTP(req)
+	if err != nil {
+		return nil, fmt.Errorf("Sensu.GetList Error calling Sensu API: %q returned: %v", err, err)
+	}
+	return s.doJSON(res)
+}
+
+// Delete resource
+func (s *Sensu) Delete(endpoint string) (map[string]interface{}, error) {
+	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("Sensu.Delete Parsing error: %q returned: %v", err, err)
+	}
+
+	res, err := s.doHTTP(req)
+	if err != nil {
+		return nil, fmt.Errorf("Sensu.Delete Error calling Sensu API: %q returned: %v", err, err)
+	}
+	return s.doJSON(res)
 }

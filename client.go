@@ -8,16 +8,16 @@ func (s *Sensu) GetClients(limit int, offset int) ([]interface{}, error) {
 }
 
 // GetClient Return client info
-func (s *Sensu) GetClient(client string) ([]interface{}, error) {
+func (s *Sensu) GetClient(client string) (map[string]interface{}, error) {
 	return s.Get(fmt.Sprintf("client/%s", client))
 }
 
 // GetClientHistory Return client history
 func (s *Sensu) GetClientHistory(client string) ([]interface{}, error) {
-	return s.Get(fmt.Sprintf("client/%s/history", client))
+	return s.GetList(fmt.Sprintf("client/%s/history", client), 0, 0)
 }
 
 // DeleteClient Return the list of clients
-func (s *Sensu) DeleteClient(client string) ([]interface{}, error) {
+func (s *Sensu) DeleteClient(client string) (map[string]interface{}, error) {
 	return s.Delete(fmt.Sprintf("client/%s", client))
 }
