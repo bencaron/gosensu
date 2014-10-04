@@ -8,7 +8,7 @@ import (
 
 func getSensuTester() *Sensu {
 	fmt.Printf("Reading sensu server config from ENV SENSU_SERVER_URL: %s\n", os.Getenv("SENSU_SERVER_URL"))
-	sensu := NewSensu("Sensu test API", "", os.Getenv("SENSU_SERVER_URL"), 15)
+	sensu := NewSensu("Sensu test API", "", os.Getenv("SENSU_SERVER_URL"), 15, "admin", "secret")
 	return sensu
 }
 
