@@ -3,7 +3,12 @@ package sensu
 import "fmt"
 
 // GetAggregates Return the list of Aggregates
-func (s *Sensu) GetAggregates(limit int, offset int) ([]interface{}, error) {
+func (s *Sensu) GetAggregates() ([]interface{}, error) {
+	return s.GetList("aggregates", 0, 0)
+}
+
+// GetAggregatesSlice Return a slice in the current list of Aggregates
+func (s *Sensu) GetAggregatesSlice(limit int, offset int) ([]interface{}, error) {
 	return s.GetList("aggregates", limit, offset)
 }
 
