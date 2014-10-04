@@ -27,7 +27,7 @@ func TestGetChecks(t *testing.T) {
 
 func TestGetCheck(t *testing.T) {
 	sensu := getSensuTester()
-	res, err := sensu.GetCheck("check_chef_client")
+	res, err := sensu.GetCheck("check_success")
 	if err != nil {
 		t.Error(fmt.Sprintf("Sensu GetCheck returned an error: %v", err))
 	}
@@ -50,7 +50,7 @@ func TestGetCheck(t *testing.T) {
 func TestRequestCheck(t *testing.T) {
 	sensu := getSensuTester()
 
-	res, err := sensu.RequestCheck("chef_client_process")
+	res, err := sensu.RequestCheck("chef_success")
 	if err != nil {
 		t.Error(fmt.Sprintf("Sensu checks returned an error: %v", err))
 	}
