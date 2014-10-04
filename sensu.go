@@ -19,8 +19,8 @@ type Sensu struct {
 	Pass    string
 }
 
-// NewSensu initialize a new Sensu API
-func NewSensu(name string, path string, url string, timeout int, username string, password string) *Sensu {
+// New Initialize a new Sensu API
+func New(name string, path string, url string, timeout int, username string, password string) *Sensu {
 	return &Sensu{name, path, url, timeout, username, password}
 }
 
