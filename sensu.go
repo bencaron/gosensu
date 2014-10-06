@@ -38,7 +38,6 @@ func (s *Sensu) Info() (map[string]interface{}, error) {
 // Get ...
 func (s *Sensu) Get(endpoint string) (map[string]interface{}, error) {
 	// Call a List with magic value of limit 0 and offset 0
-	fmt.Printf("DEBUG: Get endpoint = %s", endpoint)
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

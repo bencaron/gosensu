@@ -2,11 +2,15 @@ package sensu
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 )
 
+func TestChecks(t *testing.T) {
+	fmt.Printf("Test Checks:\n*******************\n\n")
+}
+
 func TestGetChecks(t *testing.T) {
+	fmt.Printf("\tGet Checks:\n")
 	sensu := getSensuTester()
 	res, err := sensu.GetChecks()
 	if err != nil {
@@ -15,17 +19,19 @@ func TestGetChecks(t *testing.T) {
 	if res == nil {
 		t.Error("Sensu res is nil")
 	}
-	//	#fmt.Printf("checks: %v\n", res)
+	fmt.Printf("\tGet Checks got:\n\t\t%v\n", res)
 
-	fmt.Printf("checks[0]: %v\n", res[0])
-	command := res[0].(map[string]interface{})
-	fmt.Printf("\nchecks[0][command]: %v\n", command["name"])
-	fmt.Printf("\nchecks[0][command]: %v\n", res[0].(map[string]interface{})["name"])
-	fmt.Printf("\nchecks[0][command].type: %v\n", reflect.TypeOf(res))
-
+	/*
+		fmt.Printf("\tchecks[0]: %v\n", res[0])
+		command := res[0].(map[string]interface{})
+		fmt.Printf("\t\nchecks[0][command]: %v\n", command["name"])
+		fmt.Printf("\t\nchecks[0][command]: %v\n", res[0].(map[string]interface{})["name"])
+		fmt.Printf("\t\nchecks[0][command].type: %v\n", reflect.TypeOf(res))
+	*/
 }
 
 func TestGetCheck(t *testing.T) {
+	fmt.Printf("\tGet (ONE) Check:\n")
 	sensu := getSensuTester()
 	res, err := sensu.GetCheck("check_success")
 	if err != nil {
@@ -34,10 +40,10 @@ func TestGetCheck(t *testing.T) {
 	if res == nil {
 		t.Error("Sensu res is nil")
 	}
-	for k, v := range res {
+	/*for k, v := range res {
 		fmt.Printf("check: k = %s, v =%v\n", k, v)
-	}
-	//	#fmt.Printf("checks: %v\n", res)
+	}*/
+	fmt.Printf("\tTest Get (one) Check result: %v\n\t\t", res)
 	//
 	// fmt.Printf("checks[0]: %v\n", res[0])
 	// command := res[0].(map[string]interface{})
@@ -48,7 +54,10 @@ func TestGetCheck(t *testing.T) {
 }
 
 func TestRequestCheck(t *testing.T) {
+	fmt.Printf("\tRequest Check:\n")
 	sensu := getSensuTester()
+
+	t.Skip("Skipping TestRequestCheck, code not ready yet.")
 
 	res, err := sensu.RequestCheck("chef_success")
 	if err != nil {

@@ -23,7 +23,5 @@ func (s *Sensu) GetEventsCheckForClient(client string, check string) ([]interfac
 
 // ResolveEvent Resolves an event (delayed action)
 func (s *Sensu) ResolveEvent(client string, check string) (map[string]interface{}, error) {
-	//return s.Get("events", client)
-	fmt.Printf("FIXME ResolveEvent Post: payload missing\n")
-	return s.Post(fmt.Sprintf("events/resolve/%s/%s", client, check))
+	return s.Delete(fmt.Sprintf("events/%s/%s", client, check))
 }
