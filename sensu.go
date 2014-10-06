@@ -42,12 +42,12 @@ func (s *Sensu) Get(endpoint string) (map[string]interface{}, error) {
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.Get Parsing error: %q returned: %v", err, err)
+		return nil, fmt.Errorf("Parsing error: %q returned: %v", err, err)
 	}
 
 	res, err := s.doHTTP(req)
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.Get Error calling Sensu API: %q returned: %v", err, err)
+		return nil, fmt.Errorf("API call to %q returned: %v", url, err)
 	}
 	return s.doJSON(res)
 }
@@ -60,11 +60,11 @@ func (s *Sensu) GetList(endpoint string, limit int, offset int) ([]interface{}, 
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.GetList URL Parsing error: %q returned: %v", err, err)
+		return nil, fmt.Errorf("URL Parsing error: %q returned: %v", url, err)
 	}
 	res, err := s.doHTTP(req)
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.GetList Error calling Sensu API: %q returned: %v", err, err)
+		return nil, fmt.Errorf("API call to %q returned: %v", url, err)
 	}
 	return s.doJSONArray(res)
 }
@@ -78,10 +78,10 @@ func (s *Sensu) doHTTP(req *http.Request) ([]byte, error) {
 	client := http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("HTTP request returned: %v", err)
+		return nil, fmt.Errorf("%v", err)
 	}
 	if res.StatusCode >= 400 {
-		return nil, fmt.Errorf("Error calling API at %s: %s", s.URL, res.Status)
+		return nil, fmt.Errorf("%v", res.Status)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
@@ -119,12 +119,12 @@ func (s *Sensu) Post(endpoint string) (map[string]interface{}, error) {
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.Post Parsing error: %q returned: %v", err, err)
+		return nil, fmt.Errorf("Parsing error: %q returned: %v", url, err)
 	}
 
 	res, err := s.doHTTP(req)
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.GetList Error calling Sensu API: %q returned: %v", err, err)
+		return nil, fmt.Errorf("API call to %q returned: %v", url, err)
 	}
 	return s.doJSON(res)
 }
@@ -138,11 +138,11 @@ func (s *Sensu) PostPayload(endpoint string, payload string) (map[string]interfa
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("POST", url, strings.NewReader(payload))
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.PostPayload Parsing error: %q returned: %v", err, err)
+		return nil, fmt.Errorf("Parsing error: %q returned: %v", url, err)
 	}
 	res, err := s.doHTTP(req)
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.GetList Error calling Sensu API: %q returned: %v", err, err)
+		return nil, fmt.Errorf("API call to %q returned: %v", url, err)
 	}
 	return s.doJSON(res)
 }
@@ -152,12 +152,12 @@ func (s *Sensu) Delete(endpoint string) (map[string]interface{}, error) {
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.Delete Parsing error: %q returned: %v", err, err)
+		return nil, fmt.Errorf("Parsing error: %q returned: %v", err, err)
 	}
 
 	res, err := s.doHTTP(req)
 	if err != nil {
-		return nil, fmt.Errorf("Sensu.Delete Error calling Sensu API: %q returned: %v", err, err)
+		return nil, fmt.Errorf("API call to %q returned: %v", url, err)
 	}
 	return s.doJSON(res)
 }
