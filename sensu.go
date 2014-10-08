@@ -19,6 +19,12 @@ type Sensu struct {
 	Pass    string
 }
 
+// NoLimit do not specify a limit parameter
+const NoLimit int = -1
+
+// NoOffset do not specify an offset parameter
+const NoOffset int = -1
+
 // New Initialize a new Sensu API
 func New(name string, path string, url string, timeout int, username string, password string) *Sensu {
 	return &Sensu{name, path, url, timeout, username, password}
@@ -54,8 +60,16 @@ func (s *Sensu) Get(endpoint string) (map[string]interface{}, error) {
 // GetList Construct an API call and return the list of results
 func (s *Sensu) GetList(endpoint string, limit int, offset int) ([]interface{}, error) {
 
-	//ERROR GET LIST TODO deal with limit %d and offset %d", limit, offset
-
+	/*
+		args := ""
+		//ERROR GET LIST TODO deal with limit %d and offset %d", limit, offset
+		if limit != NOLIMIT {
+			args = fmt.Sprintf("%slimit=%d", args, limit)
+		}
+		if offset != NOOFFSET {
+			args = fmt.Sprintf("%soffset=%d", args, limit)
+		}
+	*/
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
