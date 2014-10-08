@@ -31,6 +31,10 @@ func TestResolveEvents(t *testing.T) {
 		t.Error(fmt.Sprintf("Sensu events returned and error: %v\n", err))
 	}
 	fmt.Printf("\treturned:\n\t\t%v\n\n", events)
+	ev, err := sensu.GetEventsCheckForClient("server-0-13-0", "check_critical")
+	if err == nil {
+		t.Error(fmt.Sprintf("Sensu Resolve Events should not return an event after it's deletion. Got : %v", ev))
+	}
 }
 
 func TestResolveNonExistingEvents(t *testing.T) {
