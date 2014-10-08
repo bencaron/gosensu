@@ -3,17 +3,13 @@ package sensu
 import (
 	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetClientList(t *testing.T) {
+	assert := assert.New(t)
 	sensu := getSensuTester()
 	events, err := sensu.GetEvents()
-	if err != nil {
-		t.Error(fmt.Sprintf("Sensu events returned and error: %v", err))
-	}
-	if events == nil {
-		t.Error("Sensu events is nil")
-	}
-	// FIXME
-	// fmt.Printf("events: %v", events)
+	assert.NotNil(events, fmt.Sprintf("Sensu events returned and error: %v", err))
 }
