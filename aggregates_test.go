@@ -4,20 +4,19 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetAggregates(t *testing.T) {
+	assert := assert.New(t)
 	sensu := getSensuTester()
+
 	if strings.Contains(sensu.URL, "localhost") {
 		t.Skip("Not testing aggregates with canned")
 	}
-	agg, err := sensu.GetAggregates()
-	if err != nil {
-		t.Error(fmt.Sprintf("Sensu agg returned and error: %v", err))
+	if assert.NotNil(t, sensu) {
+		agg, err := sensu.GetAggregates()
+		assert.Nil(err, fmt.Sprintf("GetAggregates return an error: %s", err))
+		assert.NotNil(agg, "GetAggregates return a nil result!")
 	}
-	if agg == nil {
-		t.Error("Sensu agg is nil")
-	}
-	fmt.Printf("TestGet Aggregates:\n")
-	fmt.Printf("\t\tagg: %v", agg)
 }

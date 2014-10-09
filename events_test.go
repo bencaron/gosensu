@@ -19,8 +19,8 @@ func TestGetEvents(t *testing.T) {
 	if events == nil {
 		t.Error("Sensu events is nil")
 	}
-	fmt.Printf("TestGet Events:\n")
-	fmt.Printf("\t\tev: %v", events)
+	//fmt.Printf("TestGet Events:\n")
+	//fmt.Printf("\t\tev: %v", events)
 }
 
 func TestResolveEvents(t *testing.T) {
