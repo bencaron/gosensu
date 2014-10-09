@@ -3,45 +3,30 @@ package sensu
 import (
 	"fmt"
 	"testing"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestEvents(t *testing.T) {
-	fmt.Printf("Test Events:\n*******************\n\n")
-}
-
 func TestGetEvents(t *testing.T) {
-	fmt.Printf("Get Events:\n")
 	sensu := getSensuTester()
+	assert := assert.New(t)
 	events, err := sensu.GetEvents()
-	if err != nil {
-		t.Error(fmt.Sprintf("Sensu events returned and error: %v", err))
-	}
-	if events == nil {
-		t.Error("Sensu events is nil")
-	}
-	//fmt.Printf("TestGet Events:\n")
-	//fmt.Printf("\t\tev: %v", events)
+	assert.Nil(err, fmt.Sprintf("GetEvents returned an error: %s", err))
+	assert.NotNil(events, "GetEvents returned nil!")
 }
 
 func TestResolveEvents(t *testing.T) {
-	fmt.Printf("ResolveEvents:\n")
 	sensu := getSensuTester()
+	assert := assert.New(t)
 	events, err := sensu.ResolveEvent("server-0-13-0", "check_critical")
-	if err != nil {
-		t.Error(fmt.Sprintf("Sensu events returned and error: %v\n", err))
-	}
-	fmt.Printf("\treturned:\n\t\t%v\n\n", events)
+	assert.Nil(err, fmt.Sprintf("ResolveEvents returned an error: %s", err))
+	assert.NotNil(events, "ResolveEvents returned nil!")
+
 	ev, err := sensu.GetEventsCheckForClient("server-0-13-0", "check_critical")
-	if err == nil {
-		t.Error(fmt.Sprintf("Sensu Resolve Events should not return an event after it's deletion. Got : %v", ev))
-	}
+	assert.NotNil(err, fmt.Sprintf("Sensu Resolve Events should not return an event after it's deletion. Got : %v", ev))
 }
 
 func TestResolveNonExistingEvents(t *testing.T) {
-	fmt.Printf("ResolveEvents (non-existing):\n")
 	sensu := getSensuTester()
 	ev, err := sensu.ResolveEvent("server-0-13-0", "check_not_real")
-	if err == nil {
-		t.Error(fmt.Sprintf("Sensu Resolve Events should not returned and error on non-existing checks: %v", ev))
-	}
+	assert.NotNil(t, err, fmt.Sprintf("Sensu Resolve Events should not returned and error on non-existing checks: %v", ev))
 }
