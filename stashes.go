@@ -32,9 +32,18 @@ func (s *Sensu) CreateStash(payload Stash) (map[string]interface{}, error) {
 	//	return s.Post(fmt.Sprintf("stashes/create"), payload)
 	payloadstr, err := json.Marshal(payload)
 	if err != nil {
-		return nil, fmt.Errorf("Parsing error: %q returned: %v", err, err)
+		return nil, fmt.Errorf("Stash parsing error: %q returned: %v", err, err)
 	}
 	return s.PostPayload(fmt.Sprintf("stashes"), string(payloadstr[:]))
+}
+// CreateStashPath create a stash at path
+func (s *Sensu) CreateStashPath(path string, payload map[string]interface{}) (map[string]interface{}, error) {
+	//	return s.Post(fmt.Sprintf("stashes/create"), payload)
+	payloadstr, err := json.Marshal(payload)
+	if err != nil {
+		return nil, fmt.Errorf("Stash parsing error: %q returned: %v", err, err)
+	}
+	return s.PostPayload(fmt.Sprintf("stashes/%s", path), string(payloadstr[:]))
 }
 
 // DeleteStash Delete a stash (JSON document)
