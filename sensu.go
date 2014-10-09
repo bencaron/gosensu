@@ -120,6 +120,9 @@ func (s *Sensu) doJSON(body []byte) (map[string]interface{}, error) {
 	if err := json.Unmarshal(body, &results); err != nil {
 		return nil, fmt.Errorf("Parsing JSON-encoded response body: %v", err)
 	}
+
+	fmt.Printf("\n hello do json, got: %v", results)
+
 	return results, nil
 }
 
@@ -144,12 +147,14 @@ func (s *Sensu) Post(endpoint string) (map[string]interface{}, error) {
 
 // PostPayload to endpoint
 func (s *Sensu) PostPayload(endpoint string, payload string) (map[string]interface{}, error) {
-	// Call a List with magic value of limit 0 and offset 0
-
-	//ERROR GET LIST TODO deal with limit %d and offset %d", limit, offset
+	fmt.Printf("DEBUG: PostPayload = %s", payload)
 
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("POST", url, strings.NewReader(payload))
+	//      'Content-Type': 'application/json',
+	//    'Content-Length': data.length
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Length", fmt.Sprintf("%d", len(payload)))
 	if err != nil {
 		return nil, fmt.Errorf("Parsing error: %q returned: %v", url, err)
 	}
