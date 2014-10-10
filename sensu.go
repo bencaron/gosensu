@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	//"bytes"
 )
 
 // Sensu struct contains the API details
@@ -120,9 +121,6 @@ func (s *Sensu) doJSON(body []byte) (map[string]interface{}, error) {
 	if err := json.Unmarshal(body, &results); err != nil {
 		return nil, fmt.Errorf("Parsing JSON-encoded response body: %v", err)
 	}
-
-	fmt.Printf("\n hello do json, got: %v", results)
-
 	return results, nil
 }
 
@@ -147,14 +145,14 @@ func (s *Sensu) Post(endpoint string) (map[string]interface{}, error) {
 
 // PostPayload to endpoint
 func (s *Sensu) PostPayload(endpoint string, payload string) (map[string]interface{}, error) {
-	fmt.Printf("DEBUG: PostPayload = %s", payload)
-
+	fmt.Printf("DEBUG: PostPayload = %s\n", payload)
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
-	req, err := http.NewRequest("POST", url, strings.NewReader(payload))
-	//      'Content-Type': 'application/json',
-	//    'Content-Length': data.length
+
+	req, err := http.NewRequest("POST", url, strings.NewReader(fmt.Sprintf("%s\n\n", payload)))
+
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Length", fmt.Sprintf("%d", len(payload)))
+
 	if err != nil {
 		return nil, fmt.Errorf("Parsing error: %q returned: %v", url, err)
 	}
@@ -173,9 +171,22 @@ func (s *Sensu) Delete(endpoint string) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("Parsing error: %q returned: %v", err, err)
 	}
 
-	res, err := s.doHTTP(req)
+	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("API call to %q returned: %v", url, err)
 	}
-	return s.doJSON(res)
+
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+	if res.StatusCode >= 400 {
+		return nil, fmt.Errorf("%v", res.Status)
+	}
+
+	body, err := ioutil.ReadAll(res.Body)
+	res.Body.Close()
+	if err != nil {
+		return nil, fmt.Errorf("Parsing response body returned: %v", err)
+	}
+	return s.doJSON(body)
 }
