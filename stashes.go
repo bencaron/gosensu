@@ -5,13 +5,6 @@ import (
 	"fmt"
 )
 
-// Stash Stuff you want Sensu to hide
-type Stash struct {
-	Path    string                 `json:"path"`
-	Content map[string]interface{} `json:"content,string"`
-	Expire  int                    `json:"expire,omitempty"`
-}
-
 // GetStashes Return a list of stashes path
 func (s *Sensu) GetStashes() ([]interface{}, error) {
 	return s.GetList(fmt.Sprintf("stashes"), NoLimit, NoOffset)
@@ -28,7 +21,7 @@ func (s *Sensu) GetStash(path string) (map[string]interface{}, error) {
 }
 
 // CreateStash create a stash (JSON document)
-func (s *Sensu) CreateStash(payload Stash) (map[string]interface{}, error) {
+func (s *Sensu) CreateStash(payload interface{}) (map[string]interface{}, error) {
 	//	return s.Post(fmt.Sprintf("stashes/create"), payload)
 	payloadstr, err := json.Marshal(payload)
 	if err != nil {
@@ -36,6 +29,7 @@ func (s *Sensu) CreateStash(payload Stash) (map[string]interface{}, error) {
 	}
 	return s.PostPayload(fmt.Sprintf("stashes"), string(payloadstr[:]))
 }
+
 // CreateStashPath create a stash at path
 func (s *Sensu) CreateStashPath(path string, payload map[string]interface{}) (map[string]interface{}, error) {
 	//	return s.Post(fmt.Sprintf("stashes/create"), payload)
