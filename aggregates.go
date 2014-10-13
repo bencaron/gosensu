@@ -26,6 +26,6 @@ func (s *Sensu) GetAggregateIssued(check string, issued string, summarize bool, 
 }
 
 // DeleteAggregate Return the list of Aggregates
-func (s *Sensu) DeleteAggregate(aggregate string) (map[string]interface{}, error) {
+func (s *Sensu) DeleteAggregate(aggregate string) error {
 	return s.Delete(fmt.Sprintf("aggregate/%s", aggregate))
 }

@@ -23,6 +23,6 @@ func (s *Sensu) GetClientHistory(client string) ([]interface{}, error) {
 }
 
 // DeleteClient Return the list of clients
-func (s *Sensu) DeleteClient(client string) (map[string]interface{}, error) {
+func (s *Sensu) DeleteClient(client string) error {
 	return s.Delete(fmt.Sprintf("clients/%s", client))
 }
