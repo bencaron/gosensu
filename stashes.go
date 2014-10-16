@@ -41,6 +41,6 @@ func (s *Sensu) CreateStashPath(path string, payload map[string]interface{}) (ma
 }
 
 // DeleteStash Delete a stash (JSON document)
-func (s *Sensu) DeleteStash(path string) (map[string]interface{}, error) {
+func (s *Sensu) DeleteStash(path string) error {
 	return s.Delete(fmt.Sprintf("stashes/%s", path))
 }
