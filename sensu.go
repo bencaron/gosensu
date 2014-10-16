@@ -164,29 +164,25 @@ func (s *Sensu) PostPayload(endpoint string, payload string) (map[string]interfa
 }
 
 // Delete resource
-func (s *Sensu) Delete(endpoint string) (map[string]interface{}, error) {
+func (s *Sensu) Delete(endpoint string) error {
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Parsing error: %q returned: %v", err, err)
+		return fmt.Errorf("Parsing error: %q returned: %v", err, err)
 	}
 
 	res, err := http.DefaultClient.Do(req)
+	defer res.Body.Close()
 	if err != nil {
-		return nil, fmt.Errorf("API call to %q returned: %v", url, err)
+		return fmt.Errorf("API call to %q returned: %v", url, err)
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("%v", err)
+		return fmt.Errorf("%v", err)
 	}
 	if res.StatusCode >= 400 {
-		return nil, fmt.Errorf("%v", res.Status)
+		return fmt.Errorf("%v", res.Status)
 	}
 
-	body, err := ioutil.ReadAll(res.Body)
-	res.Body.Close()
-	if err != nil {
-		return nil, fmt.Errorf("Parsing response body returned: %v", err)
-	}
-	return s.doJSON(body)
+	return nil
 }
