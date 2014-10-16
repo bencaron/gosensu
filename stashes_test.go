@@ -15,7 +15,8 @@ func TestCreateStashes(t *testing.T) {
 	if assert.NotNil(t, sensu) {
 		content := make(map[string]interface{})
 		content["tesxxxt"] = "allsssso"
-		stash := Stash{testPath, content, 30}
+    //stash := Stash{testPath, content, 30}
+    stash := `{"path": "test", "content":{}, "expire": 10}`
 		stashes, err := sensu.CreateStash(stash)
 		fmt.Printf("\nstashes: %v err %s\n", stashes, err)
 		assert.NotNil(stashes, fmt.Sprintf("CreateStash is nil, error is : %s", err))
