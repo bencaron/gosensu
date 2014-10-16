@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 	//"bytes"
 )
 
@@ -89,7 +90,7 @@ func (s *Sensu) doHTTP(req *http.Request) ([]byte, error) {
 		req.SetBasicAuth(s.User, s.Pass)
 	}
 
-	client := http.Client{}
+	client := http.Client{Timeout: time.Duration(s.Timeout) * time.Second}
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("%v", err)
