@@ -34,24 +34,21 @@ func New(name string, path string, url string, timeout int, username string, pas
 
 // Health The health endpoint checks to see if the api can connect to redis and rabbitmq. It takes parameters for minimum consumers and maximum messages and checks rabbitmq.
 func (s *Sensu) Health(consumers int, messages int) (map[string]interface{}, error) {
-	fmt.Printf("FIXME health args")
-	return s.Get(fmt.Sprintf("health/%d/%d", consumers, messages))
+	return s.get(fmt.Sprintf("health/%d/%d", consumers, messages))
 }
 
 // Info Will return the Sensu version along with rabbitmq and redis information.
 func (s *Sensu) Info() (map[string]interface{}, error) {
-	return s.Get("info")
+	return s.get("info")
 }
 
-// Get ...
-func (s *Sensu) Get(endpoint string) (map[string]interface{}, error) {
-	// Call a List with magic value of limit 0 and offset 0
+// get ...
+func (s *Sensu) get(endpoint string) (map[string]interface{}, error) {
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("Parsing error: %q returned: %v", err, err)
 	}
-
 	res, err := s.doHTTP(req)
 	if err != nil {
 		return nil, fmt.Errorf("API call to %q returned: %v", url, err)
@@ -59,8 +56,9 @@ func (s *Sensu) Get(endpoint string) (map[string]interface{}, error) {
 	return s.doJSON(res)
 }
 
-// GetList Construct an API call and return the list of results
-func (s *Sensu) GetList(endpoint string, limit int, offset int) ([]interface{}, error) {
+// getList Construct an API call and return the list of results
+//  LIMITATION: the limit/offset is currently ignored and all results are sent back
+func (s *Sensu) getList(endpoint string, limit int, offset int) ([]interface{}, error) {
 
 	/*
 		args := ""
@@ -126,7 +124,7 @@ func (s *Sensu) doJSON(body []byte) (map[string]interface{}, error) {
 }
 
 // Post to endpoint
-func (s *Sensu) Post(endpoint string) (map[string]interface{}, error) {
+func (s *Sensu) post(endpoint string) (map[string]interface{}, error) {
 	// Call a List with magic value of limit 0 and offset 0
 
 	//ERROR GET LIST TODO deal with limit %d and offset %d", limit, offset
@@ -144,9 +142,8 @@ func (s *Sensu) Post(endpoint string) (map[string]interface{}, error) {
 	return s.doJSON(res)
 }
 
-// PostPayload to endpoint
-func (s *Sensu) PostPayload(endpoint string, payload string) (map[string]interface{}, error) {
-	fmt.Printf("DEBUG: PostPayload = %s\n", payload)
+// postPayload to endpoint
+func (s *Sensu) postPayload(endpoint string, payload string) (map[string]interface{}, error) {
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(fmt.Sprintf("%s\n\n", payload)))
@@ -165,7 +162,7 @@ func (s *Sensu) PostPayload(endpoint string, payload string) (map[string]interfa
 }
 
 // Delete resource
-func (s *Sensu) Delete(endpoint string) error {
+func (s *Sensu) delete(endpoint string) error {
 	url := fmt.Sprintf("%s/%s", s.URL, endpoint)
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
@@ -184,6 +181,5 @@ func (s *Sensu) Delete(endpoint string) error {
 	if res.StatusCode >= 400 {
 		return fmt.Errorf("%v", res.Status)
 	}
-
 	return nil
 }

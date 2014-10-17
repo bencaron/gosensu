@@ -4,12 +4,12 @@ import "fmt"
 
 // GetChecks Return the list of checks
 func (s *Sensu) GetChecks() ([]interface{}, error) {
-	return s.GetList("checks", 0, 0)
+	return s.getList("checks", 0, 0)
 }
 
 // GetCheck Return check info for a specific check
 func (s *Sensu) GetCheck(check string) (map[string]interface{}, error) {
-	return s.Get(fmt.Sprintf("checks/%s", check))
+	return s.get(fmt.Sprintf("checks/%s", check))
 }
 
 // RequestCheck Issues a check request
@@ -21,6 +21,6 @@ func (s *Sensu) RequestCheck(checkName string) (map[string]interface{}, error) {
 		}
 		check := rawcheck.
 		payload := fmt.Printf("{ \"check\": \"%s\", \"subscriber\": %v}", check["name"], json.Marshall(check["subscribers"]))
-		return s.PostPayload(fmt.Sprintf("check/request"))
+		return s.postPayload(fmt.Sprintf("check/request"))
 	*/
 }
