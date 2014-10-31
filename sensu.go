@@ -48,12 +48,13 @@ import (
 
 // Sensu struct contains the API details
 type Sensu struct {
-	Name    string
-	Path    string
-	URL     string
-	Timeout int
-	User    string
-	Pass    string
+	Name     string
+	Path     string
+	URL      string
+	Timeout  int
+	User     string
+	Pass     string
+	Insecure bool
 }
 
 // NoLimit do not specify a limit parameter
@@ -63,8 +64,8 @@ const NoLimit int = -1
 const NoOffset int = -1
 
 // New Initialize a new Sensu API
-func New(name string, path string, url string, timeout int, username string, password string) *Sensu {
-	return &Sensu{name, path, url, timeout, username, password}
+func New(name string, path string, url string, timeout int, username string, password string, insecure bool) *Sensu {
+	return &Sensu{name, path, url, timeout, username, password, insecure}
 }
 
 // Health The health endpoint checks to see if the api can connect to redis and rabbitmq. It takes parameters for minimum consumers and maximum messages and checks rabbitmq.
@@ -124,7 +125,7 @@ func (s *Sensu) doHTTP(req *http.Request) ([]byte, error) {
 	}
 
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: s.Insecure},
 	}
 
 	client := http.Client{Timeout: time.Duration(s.Timeout) * time.Second, Transport: tr}
