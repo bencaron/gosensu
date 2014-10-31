@@ -36,6 +36,7 @@ objects (HTTP status 404)
 package sensu
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -122,7 +123,11 @@ func (s *Sensu) doHTTP(req *http.Request) ([]byte, error) {
 		req.SetBasicAuth(s.User, s.Pass)
 	}
 
-	client := http.Client{Timeout: time.Duration(s.Timeout) * time.Second}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	client := http.Client{Timeout: time.Duration(s.Timeout) * time.Second, Transport: tr}
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("%v", err)
