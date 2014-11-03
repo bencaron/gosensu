@@ -210,10 +210,11 @@ func (s *Sensu) delete(endpoint string) error {
 	}
 
 	res, err := http.DefaultClient.Do(req)
-	defer res.Body.Close()
+
 	if err != nil {
 		return fmt.Errorf("API call to %q returned: %v", url, err)
 	}
+	defer res.Body.Close()
 
 	if err != nil {
 		return fmt.Errorf("%v", err)
