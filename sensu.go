@@ -209,6 +209,10 @@ func (s *Sensu) delete(endpoint string) error {
 		return fmt.Errorf("Parsing error: %q returned: %v", err, err)
 	}
 
+	if s.User != "" && s.Pass != "" {
+		req.SetBasicAuth(s.User, s.Pass)
+	}
+
 	res, err := http.DefaultClient.Do(req)
 	defer res.Body.Close()
 	if err != nil {
