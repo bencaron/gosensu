@@ -7,3 +7,6 @@ canned:
 
 build:
 	go build .
+
+get-deps:
+	go get github.com/stretchr/testify/assert
