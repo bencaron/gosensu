@@ -213,6 +213,8 @@ func (s *Sensu) delete(endpoint string) error {
 		req.SetBasicAuth(s.User, s.Pass)
 	}
 
+	http.DefaultClient.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: s.Insecure}}
+
 	res, err := http.DefaultClient.Do(req)
 
 	if err != nil {
