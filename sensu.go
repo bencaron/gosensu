@@ -130,15 +130,19 @@ func (s *Sensu) doHTTP(req *http.Request) ([]byte, error) {
 
 	client := http.Client{Timeout: time.Duration(s.Timeout) * time.Second, Transport: tr}
 	res, err := client.Do(req)
+
 	if err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
+
+	defer res.Body.Close()
+
 	if res.StatusCode >= 400 {
 		return nil, fmt.Errorf("%v", res.Status)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
-	res.Body.Close()
+
 	if err != nil {
 		return nil, fmt.Errorf("Parsing response body returned: %v", err)
 	}
