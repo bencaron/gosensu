@@ -69,7 +69,7 @@ func New(name string, path string, url string, timeout int, username string, pas
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecure},
 	}
 	
-	client := http.Client{Timeout: time.Duration(s.Timeout) * time.Second, Transport: tr}
+	client := http.Client{Timeout: time.Duration(timeout) * time.Second, Transport: tr}
 	
 	return &Sensu{name, path, url, timeout, username, password, client}
 }
@@ -218,9 +218,7 @@ func (s *Sensu) delete(endpoint string) error {
 		req.SetBasicAuth(s.User, s.Pass)
 	}
 
-	http.DefaultClient.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: s.Insecure}}
-
-	res, err := http.DefaultClient.Do(req)
+	res, err := s.Client.Do(req)
 
 	if err != nil {
 		return fmt.Errorf("API call to %q returned: %v", url, err)
