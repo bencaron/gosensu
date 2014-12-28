@@ -125,8 +125,11 @@ func (s *Sensu) doHTTP(req *http.Request) ([]byte, error) {
 	}
 
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: s.Insecure},
+		TLSClientConfig:   &tls.Config{InsecureSkipVerify: s.Insecure},
+		DisableKeepAlives: true,
 	}
+
+	defer tr.CloseIdleConnections()
 
 	client := http.Client{Timeout: time.Duration(s.Timeout) * time.Second, Transport: tr}
 	res, err := client.Do(req)
@@ -135,7 +138,9 @@ func (s *Sensu) doHTTP(req *http.Request) ([]byte, error) {
 		return nil, fmt.Errorf("%v", err)
 	}
 
-	defer res.Body.Close()
+	if res != nil && res.Body != nil {
+		defer res.Body.Close()
+	}
 
 	if res.StatusCode >= 400 {
 		return nil, fmt.Errorf("%v", res.Status)
@@ -217,18 +222,18 @@ func (s *Sensu) delete(endpoint string) error {
 		req.SetBasicAuth(s.User, s.Pass)
 	}
 
-	http.DefaultClient.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: s.Insecure}}
+	http.DefaultClient.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: s.Insecure}, DisableKeepAlives: true}
 
 	res, err := http.DefaultClient.Do(req)
 
 	if err != nil {
 		return fmt.Errorf("API call to %q returned: %v", url, err)
 	}
-	defer res.Body.Close()
 
-	if err != nil {
-		return fmt.Errorf("%v", err)
+	if res != nil && res.Body != nil {
+		defer res.Body.Close()
 	}
+
 	if res.StatusCode >= 400 {
 		return fmt.Errorf("%v", res.Status)
 	}
