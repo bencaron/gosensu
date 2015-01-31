@@ -14,14 +14,13 @@ func (s *Sensu) GetAggregatesSlice(limit int, offset int) ([]interface{}, error)
 
 // GetAggregate Return Aggregate info
 func (s *Sensu) GetAggregate(check string, age int) ([]interface{}, error) {
-	fmt.Printf("FIXME GetAgregate Not handling age %d", age)
+	// FIXME GetAgregate Not handling age
 	return s.getList(fmt.Sprintf("aggregate/%s", check), 0, 0)
 }
 
 // GetAggregateIssued Return Aggregate history
 func (s *Sensu) GetAggregateIssued(check string, issued string, summarize bool, result bool) (map[string]interface{}, error) {
-	// FIXME
-	fmt.Printf("FIXME Aggregate Not handling summarize/result")
+	// FIXME Aggregate Not handling summarize/result
 	return s.get(fmt.Sprintf("aggregate/%s/%s", check, issued))
 }
 
