@@ -2,8 +2,8 @@ package sensu
 
 import (
 	"fmt"
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestGetEvents(t *testing.T) {
