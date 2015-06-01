@@ -6,11 +6,11 @@
 Package sensu implements simple methods to interact with Sensu API.
 
 Usage:
-	sensu := New("Sensu test API", "", "http://your.SENSU_SERVER_URL.tld"), 15, "username", "secret")
+	sensu := New("Sensu test API", "", "http://your.SENSU_SERVER_URL.tld", 15, "username", "secret", false)
 	events = sensu.GetEvents()
 
 The sensu object expose methods that corresponds to the Sensu API:
- http://sensuapp.org/docs/0.13/api_overview
+ http://sensuapp.org/docs/0.18/api_overview
 
 The package follow the form GetApiName() or GetApiName(args, args) where the api
  call wants arguments.
@@ -48,13 +48,13 @@ import (
 
 // Sensu struct contains the API details
 type Sensu struct {
-	Name     string
-	Path     string
-	URL      string
-	Timeout  int
-	User     string
-	Pass     string
-	Client   http.Client
+	Name    string
+	Path    string
+	URL     string
+	Timeout int
+	User    string
+	Pass    string
+	Client  http.Client
 }
 
 // NoLimit do not specify a limit parameter
@@ -64,13 +64,13 @@ const NoLimit int = -1
 const NoOffset int = -1
 
 // New Initialize a new Sensu API
-func New(name string, path string, url string, timeout int, username string, password string, insecure bool) *Sensu {	
+func New(name string, path string, url string, timeout int, username string, password string, insecure bool) *Sensu {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecure},
 	}
-	
+
 	client := http.Client{Timeout: time.Duration(timeout) * time.Second, Transport: tr}
-	
+
 	return &Sensu{name, path, url, timeout, username, password, client}
 }
 
