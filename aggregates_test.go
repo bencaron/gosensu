@@ -2,9 +2,9 @@ package sensu
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGetAggregates(t *testing.T) {
